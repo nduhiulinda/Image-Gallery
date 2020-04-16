@@ -97,4 +97,6 @@ function exec_sql_query($db, $sql, $params = array())
   }
   return null;
 }
+
+$db = open_or_init_sqlite_db('secure/site.sqlite', 'secure/init.sql');
 ?>
