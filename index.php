@@ -6,40 +6,37 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-  <title>TODO</title>
+  <title>DOGGOS</title>
 </head>
 
 <body>
+  <header>
+    <?php include("includes/header.php"); ?>
+  </header>
 <main>
- <?php if($tag=="All" ) { ?>
-   <h1>All Dogs<h1>
-   <?php
-   $sql= "SELECT dogs.file_name FROM dogs ORDER BY dogs.name;";
-   $params=array();
-   $records = exec_sql_query($db, $sql, $params)->fetchAll();
-   if (count($records)>0){
-     foreach ($records as $image){ ?>
-        <img src="<?php echo ($image) ?>" alt=""><a href="..."></img>
-        <?php
-     }
-   }
- }
-   else{ ?>
-     <h1><?php echo $tag?><h1>
-     <?php
-     $sql = "...";
-     $params=array();
-     $records = exec_sql_query($db, $sql, $params)->fetchAll();
-   if (count($records)>0){
-     foreach ($records as $image){ ?>
-        <img src="<?php echo ($image) ?>" alt=""><a href="..."></img> <?php
-     }
-   }
-  }
-     ?>
 
- </main>
-  <!-- TODO: This should be your main page for your site. Remove this file when you're ready!-->
+<?php
+ $db = open_or_init_sqlite_db('secure/site.sqlite', 'secure/init.sql');
+ $sql = "SELECT * FROM dogs ORDER BY dogs.name;";
+ $params = array (
+   ":file_name" => $file_name
+ );
+ $records = exec_sql_query($db, $sql)->fetchAll(PDO::FETCH_ASSOC);
+   if (count($records)>0){
+     foreach ($records as $image){
+
+      echo "<li><a href=\"dog.php?". http_build_query(array('dog_id' => $image["id"])). "\">" . "<img src= \"uploads/dogs/" . $image["id"] . "." . $image["file_ext"] . "\" />". htmlspecialchars($image["name"]) . "</a> " . "</li>";
+
+     }
+   }
+ ?>
+<cite>Icons made by <a href="https://www.flaticon.com/authors/catalin-fertu" title="Catalin Fertu">Catalin Fertu</a> from <a href="https://www.flaticon.com/" title="Flaticon"> www.flaticon.com</a></cite>
+<button><a href="upload.php" alt="upload icon">
+<img src="images/upload_button.png"/>
+<strong> Upload </strong></a>
+</button>
+
+</main>
 
 </body>
 

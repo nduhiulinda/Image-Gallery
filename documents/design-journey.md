@@ -125,21 +125,29 @@ tags (
 > Using your request plan above, plan all of the queries you need.
 
 ```sql
-CREATE TABLE dogs (
-  id INTEGER PRIMARY KEY UNIQUE NOT NULL AUTOINCREMENT,
+CREATE TABLE dogs(
+  id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,
   name TEXT NOT NULL UNIQUE,
-  file_name TEXT NOT NULL UNIQUE
+  file_name TEXT NOT NULL UNIQUE,
+  file_ext TEXT NOT NULL
 );
 
-INSERT INTO dogs (id, name, file_name) VALUES (...);
+INSERT INTO dogs (id, name, file_name, file_ext) VALUES (...);
 
 CREATE TABLE tags (
-  id INTEGER PRIMARY KEY UNIQUE NOT NULL AUTOINCREMENT,
+  id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,
   name TEXT NOT NULL UNIQUE
-  dogs_id INTEGER NOT NULL
 );
 
-INSERT INTO tags (id, name, dogs_id) VALUES (...);
+INSERT INTO tags (id, name) VALUES (...);
+
+CREATE TABLE dogs_tags (
+  id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,
+  dogs_id INTEGER NOT NULL,
+  tags_id INTEGER NOT NULL
+);
+
+INSERT INTO dogs_tags (id, dogs_id, tags_id) VALUES (...);
 
 
 /*display all dogs*/
@@ -149,30 +157,33 @@ SELECT dogs.name FROM dogs ORDER BY dogs.name;
 SELECT DISTINCT tags.name FROM tags ORDER BY tags.name;
 
 /*display all dogs in specific tag*/
-SELECT dogs.name FROM tags INNER JOIN dogs ON dogs.id = tags.dogs_id WHERE tags.name= "..." ORDER BY dogs.name;
+SELECT dogs.name FROM dogs_tags INNER JOIN dogs ON dogs.id = dogs_tags.dogs_id WHERE dogs_tags.tags_id= ... ORDER BY dogs.name;
+
 
 /* display name on particular dog*/
 SELECT dogs.name FROM dogs WHERE file_name=...;
 
 /* display all tags on particular dog*/
-SELECT DISTINCT tags.name FROM dogs INNER JOIN tags ON dogs.id = tags.dogs_id WHERE dogs.id = ... ORDER BY tags.name;
+SELECT DISTINCT tags.name FROM dogs_tags INNER JOIN tags ON dogs_tags.tags_id = tags.id WHERE dogs_tags.dogs_id = ... ORDER BY tags.name;
 
 /* add new tag to dog*/
-INSERT INTO tags ( name, dogs_id) VALUES (...);
+INSERT INTO tags (name) VALUES (...);
+INSERT INTO dogs_tags (dogs_id, tags_id) VALUES (...);
 
 /* add existing tag to dog*/
-INSERT INTO tags ( name, dogs_id) VALUES (...);
+INSERT INTO dogs_tags (dogs_id, tags_id) VALUES (...);
 
 /* add new image/dog record */
 /* if new tag, create a new tag too*/
-INSERT INTO dogs ( name, file_name) VALUES (...);
+INSERT INTO dogs ( name, file_name, file_ext) VALUES (...);
+INSERT INTO dogs_tags (dogs_id, tags_id) VALUES (...);
 
 /* delete a dog record */
-DELETE FROM dogs WHERE dogs.id = ...;
 DELETE FROM tags WHERE tags.dogs_id = ...;
+DELETE FROM dogs WHERE dogs.id = ...;
 
 /*remove a tag from an existing dog*/
-DELETE FROM tags WHERE tags.dogs_id = ... AND tags.id = ;
+DELETE FROM dogs_tags WHERE dogs_tags.dogs_id= ... AND dogs_tags.tags_id = .... ;
 
 ```
 
@@ -190,11 +201,9 @@ DELETE FROM tags WHERE tags.dogs_id = ... AND tags.id = ;
 Example:
 ```php
 //header.php
-  <nav>
-    <ul>
-      <li class="<?php echo ($tag == 'all') ? 'curr_tag' : '' ?>"><a href="index.php">All Dogs</a></li>
-      <li class="<?php echo ($tag == '...') ? 'curr_tag' : '' ?>"><a href="index.php">Tag 1</a></li>
-    </ul>
+  <img with logo/>
+  <nav bar with all titles>
+    if nav bar element (tag) clicked, make $tag = tag clicked and highlight element (CSS). Change content displaying on page to specific tag: if $tag = tag X, $sql, display SQL results
   </nav>
 
 //index.php

@@ -10,13 +10,19 @@ BEGIN TRANSACTION;
 CREATE TABLE dogs(
   id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,
   name TEXT NOT NULL UNIQUE,
-  file_name TEXT NOT NULL UNIQUE
+  file_name TEXT NOT NULL UNIQUE,
+  file_ext TEXT NOT NULL
 );
 
 CREATE TABLE tags (
   id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,
-  name TEXT NOT NULL,
-  dogs_id INTEGER NOT NULL
+  name TEXT NOT NULL UNIQUE
+);
+
+CREATE TABLE dogs_tags (
+  id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,
+  dogs_id INTEGER NOT NULL,
+  tags_id INTEGER NOT NULL
 );
 
 
@@ -26,39 +32,44 @@ CREATE TABLE tags (
 -- INSERT INTO `examples` (id,name) VALUES (2, 'example-2');
 
 
-INSERT INTO dogs ( name, file_name) VALUES ( 'Australian Retriever', 'australian_retriever.jpg');
-INSERT INTO dogs ( name, file_name) VALUES ( 'Cocker Spaniel', 'cocker_spaniel.jpg');
-INSERT INTO dogs ( name, file_name) VALUES ( 'Collie', 'collie.jpg');
-INSERT INTO dogs ( name, file_name) VALUES ( 'Corgi Inu', 'corgi_inu.jpg');
-INSERT INTO dogs ( name, file_name) VALUES ( 'Dalmatian', 'dalmatian.jpg');
-INSERT INTO dogs ( name, file_name) VALUES ( 'King Shepherd', 'king_shepherd.jpg');
-INSERT INTO dogs ( name, file_name) VALUES ( 'Mastiff', 'mastiff.jpg');
-INSERT INTO dogs ( name, file_name) VALUES ( 'Poodle', 'poodle.jpg');
-INSERT INTO dogs ( name, file_name) VALUES ( 'Pug', 'pug.jpg');
-INSERT INTO dogs ( name, file_name) VALUES ( 'Rottweiler', 'rottweiler.jpg');
-INSERT INTO dogs ( name, file_name) VALUES ( 'Spitz', 'spitz.jpg');
-INSERT INTO dogs ( name, file_name) VALUES ( 'Terrier', 'terrier.jpg');
+INSERT INTO dogs (id, name, file_name, file_ext) VALUES (1, 'Australian Retriever', 'australian_retriever.jpg', 'jpg');
+INSERT INTO dogs (id, name, file_name, file_ext) VALUES (2, 'Cocker Spaniel', 'cocker_spaniel.jpg', 'jpg');
+INSERT INTO dogs (id, name, file_name, file_ext) VALUES (3, 'Collie', 'collie.jpg', 'jpg');
+INSERT INTO dogs (id, name, file_name, file_ext) VALUES (4, 'Corgi Inu', 'corgi_inu.jpg', 'jpg');
+INSERT INTO dogs (id, name, file_name, file_ext) VALUES (5, 'Dalmatian', 'dalmatian.jpg', 'jpg');
+INSERT INTO dogs (id, name, file_name, file_ext) VALUES (6, 'King Shepherd', 'king_shepherd.jpg', 'jpg');
+INSERT INTO dogs (id, name, file_name, file_ext) VALUES (7, 'Mastiff', 'mastiff.jpg', 'jpg');
+INSERT INTO dogs (id, name, file_name, file_ext) VALUES (8, 'Poodle', 'poodle.jpg', 'jpg');
+INSERT INTO dogs (id, name, file_name, file_ext) VALUES (9, 'Pug', 'pug.jpg', 'jpg');
+INSERT INTO dogs (id, name, file_name, file_ext) VALUES (10, 'Rottweiler', 'rottweiler.jpg', 'jpg');
+INSERT INTO dogs (id, name, file_name, file_ext) VALUES (11, 'Spitz', 'spitz.jpg', 'jpg');
+INSERT INTO dogs (id, name, file_name, file_ext) VALUES (12, 'Terrier', 'terrier.jpg', 'jpg');
 
 
 
-INSERT INTO tags ( name, dogs_id) VALUES ( 'Working Dogs', 7);
-INSERT INTO tags ( name, dogs_id) VALUES ( 'Working Dogs', 10);
-INSERT INTO tags ( name, dogs_id) VALUES ( 'Sporting Dogs', 2);
-INSERT INTO tags ( name, dogs_id) VALUES ( 'Sporting Dogs', 1);
-INSERT INTO tags ( name, dogs_id) VALUES ( 'Companion Dogs', 2);
-INSERT INTO tags ( name, dogs_id) VALUES ( 'Companion Dogs', 3);
-INSERT INTO tags ( name, dogs_id) VALUES ( 'Companion Dogs', 4);
-INSERT INTO tags ( name, dogs_id) VALUES ('Companion Dogs', 5);
-INSERT INTO tags ( name, dogs_id) VALUES ( 'Companion Dogs', 8);
-INSERT INTO tags ( name, dogs_id) VALUES ( 'Companion Dogs', 9);
-INSERT INTO tags ( name, dogs_id) VALUES ( 'Companion Dogs', 11);
-INSERT INTO tags ( name, dogs_id) VALUES ( 'Companion Dogs', 12);
-INSERT INTO tags ( name, dogs_id) VALUES ( 'Herding Dogs', 4);
-INSERT INTO tags ( name, dogs_id) VALUES ( 'Herding Dogs', 6);
-INSERT INTO tags ( name, dogs_id) VALUES ( 'Herding Dogs', 3);
-INSERT INTO tags ( name, dogs_id) VALUES ( 'Mixed Breed Dogs', 4);
-INSERT INTO tags ( name, dogs_id) VALUES ( 'Mixed Breed Dogs', 1);
+INSERT INTO tags (id, name) VALUES (1, 'Working Dogs');
+INSERT INTO tags (id, name) VALUES (2, 'Sporting Dogs');
+INSERT INTO tags (id, name) VALUES (3, 'Companion Dogs');
+INSERT INTO tags (id, name) VALUES (4, 'Herding Dogs');
+INSERT INTO tags (id, name) VALUES (5, 'Mixed Breed Dogs');
 
+INSERT INTO dogs_tags (id, dogs_id, tags_id) VALUES (1, 7, 1);
+INSERT INTO dogs_tags (id, dogs_id, tags_id) VALUES (2, 10, 1);
+INSERT INTO dogs_tags (id, dogs_id, tags_id) VALUES (3, 1, 2);
+INSERT INTO dogs_tags (id, dogs_id, tags_id) VALUES (4, 2, 2);
+INSERT INTO dogs_tags (id, dogs_id, tags_id) VALUES (5, 2, 3);
+INSERT INTO dogs_tags (id, dogs_id, tags_id) VALUES (6, 3, 3);
+INSERT INTO dogs_tags (id, dogs_id, tags_id) VALUES (7, 4, 3);
+INSERT INTO dogs_tags (id, dogs_id, tags_id) VALUES (8, 5, 3);
+INSERT INTO dogs_tags (id, dogs_id, tags_id) VALUES (9, 8, 3);
+INSERT INTO dogs_tags (id, dogs_id, tags_id) VALUES (10, 9, 3);
+INSERT INTO dogs_tags (id, dogs_id, tags_id) VALUES (11, 11, 3);
+INSERT INTO dogs_tags (id, dogs_id, tags_id) VALUES (12, 12, 3);
+INSERT INTO dogs_tags (id, dogs_id, tags_id) VALUES (13, 3, 4);
+INSERT INTO dogs_tags (id, dogs_id, tags_id) VALUES (14, 4, 4);
+INSERT INTO dogs_tags (id, dogs_id, tags_id) VALUES (15, 6, 4);
+INSERT INTO dogs_tags (id, dogs_id, tags_id) VALUES (16, 1, 5);
+INSERT INTO dogs_tags (id, dogs_id, tags_id) VALUES (17, 4, 5);
 
 
 COMMIT;
