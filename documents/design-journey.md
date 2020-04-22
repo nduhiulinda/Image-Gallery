@@ -70,23 +70,18 @@ Example:
   - Params: dogs.id (dogs.id in DB)
   - How: query string param URL
 
-- Request: back to gallery (when viewing image)
-  - Type: GET
-  - Params: tags.id (if not on the all dogs gallery)
-  - How: query string param URL
-
 - Request: edit tags information
-  - Type: GET
+  - Type: POST
   - Params: tags.id, tags.name, dogs.tag_id
   - How: form
 
 - Request: delete image
-  - Type: GET
+  - Type: POST
   - Params: dogs.id
   - How: form
 
 - Request: Upload dog record
-  - Type: GET
+  - Type: POST
   - Params: dogs.name, dogs.tag_id, tags.id
   - How: form
 
