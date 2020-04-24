@@ -92,6 +92,8 @@ button:hover{
 
 cite{
     font-size: 70%;
+    display: flex;
+    flex-wrap: wrap;
 }
 
 .content{
