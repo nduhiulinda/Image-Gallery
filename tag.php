@@ -16,32 +16,42 @@ foreach ($records as $tag){
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" type="text/css" href="styles/site.css" media="all" />
 
-  <title><?php echo $name ?></title>
+  <title><?php
+  $sql = "SELECT name FROM tags WHERE tags.id = $tags_id;";
+  $records = exec_sql_query($db, $sql)->fetchAll(PDO::FETCH_ASSOC);
+  foreach ($records as $tag){
+    $name = htmlspecialchars($tag["name"]);
+  }
+  echo $name
+  ?>
+  </title>
 </head>
 
 <body>
   <header>
     <?php include("includes/header.php"); ?>
   </header>
+
 <main>
 <?php
+  include("includes/uploads.php");
+
 $sql = "SELECT * FROM dogs_tags INNER JOIN dogs ON dogs.id = dogs_tags.dogs_id WHERE dogs_tags.tags_id=$tags_id ORDER BY dogs.name;";
 $records = exec_sql_query($db, $sql)->fetchAll(PDO::FETCH_ASSOC);
    if (count($records)>0){
      foreach ($records as $image){
-      echo "<li><a href=\"dog.php?". http_build_query(array('dog_id' => $image["id"])). "\">" . "<img src= \"uploads/dogs/" . $image["dogs_id"] . "." . $image["file_ext"] . "\" />". htmlspecialchars($image["name"]) . "</a> " . "</li>";
+      echo "<div class=\"images\"><figure><a href=\"dog.php?". http_build_query(array('dog_id' => $image["id"])). "\">" . "<img src= \"uploads/dogs/" . $image["dogs_id"] . "." . $image["file_ext"] . "\" /><figcaption>". htmlspecialchars($image["name"]) . "</figcaption></a> " . "</figure></div>";
 
      }
    }
 ?>
 
-<button><a href="upload.php" alt="upload icon">
-<img src="images/upload_button.png"/>
-<strong> Upload </strong></a>
-</button>
-
 </main>
+
+<?php include("includes/footer.php"); ?>
+
 
 </body>
 

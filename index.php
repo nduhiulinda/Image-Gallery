@@ -6,7 +6,10 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
+
   <title>DOGGOS</title>
+  <link rel="stylesheet" type="text/css" href="styles/site.css" media="all" />
+
 </head>
 
 <body>
@@ -15,7 +18,9 @@
   </header>
 <main>
 
+
 <?php
+  include("includes/uploads.php");
  $db = open_or_init_sqlite_db('secure/site.sqlite', 'secure/init.sql');
  $sql = "SELECT * FROM dogs ORDER BY dogs.name;";
  $params = array (
@@ -25,18 +30,21 @@
    if (count($records)>0){
      foreach ($records as $image){
 
-      echo "<li><a href=\"dog.php?". http_build_query(array('dog_id' => $image["id"])). "\">" . "<img src= \"uploads/dogs/" . $image["id"] . "." . $image["file_ext"] . "\" />". htmlspecialchars($image["name"]) . "</a> " . "</li>";
+      echo "<div class=\"images\">
+      <figure>
+      <a href=\"dog.php?". http_build_query(array('dog_id' => $image["id"])). "\">" . "<img src= \"uploads/dogs/" . $image["id"] . "." . $image["file_ext"] . "\" />
+      <figcaption>". htmlspecialchars($image["name"]) . "</figcaption>
+      </a> " . "
+      </figure>
+      </div>";
 
      }
    }
  ?>
-<cite>Icons made by <a href="https://www.flaticon.com/authors/catalin-fertu" title="Catalin Fertu">Catalin Fertu</a> from <a href="https://www.flaticon.com/" title="Flaticon"> www.flaticon.com</a></cite>
-<button><a href="upload.php" alt="upload icon">
-<img src="images/upload_button.png"/>
-<strong> Upload </strong></a>
-</button>
 
 </main>
+
+<?php include("includes/footer.php"); ?>
 
 </body>
 
