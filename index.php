@@ -21,7 +21,7 @@
 
 <?php
   include("includes/uploads.php");
- $db = open_or_init_sqlite_db('secure/site.sqlite', 'secure/init.sql');
+ //$db = open_or_init_sqlite_db('secure/site.sqlite', 'secure/init.sql');
  $sql = "SELECT * FROM dogs ORDER BY dogs.name;";
  $params = array (
    ":file_name" => $file_name

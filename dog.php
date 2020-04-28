@@ -4,9 +4,9 @@
 
 <?php
 
-$dogs_id = $_GET["dog_id"];
+$dog_id = $_GET["dog_id"];
 $db = open_or_init_sqlite_db('secure/site.sqlite', 'secure/init.sql');
-$sql = "SELECT * FROM dogs WHERE id= $dogs_id ORDER BY dogs.name;";
+$sql = "SELECT * FROM dogs WHERE id= $dog_id ORDER BY dogs.name;";
 $records = exec_sql_query($db, $sql)->fetchAll(PDO::FETCH_ASSOC);
 foreach ($records as $dog){
     $name = htmlspecialchars($dog["name"]);
@@ -37,7 +37,7 @@ foreach ($records as $dog){
   <cite>Source:<a href="https://dogtime.com/dog-breeds/profiles">Dogtime</a></cite>
 
   <?php
-  $sql = "SELECT * FROM dogs WHERE id= $dogs_id ORDER BY dogs.name;";
+  $sql = "SELECT * FROM dogs WHERE id= $dog_id ORDER BY dogs.name;";
   $records = exec_sql_query($db, $sql)->fetchAll(PDO::FETCH_ASSOC);
   foreach ($records as $dog){
       $name = htmlspecialchars($dog["name"]);
@@ -48,7 +48,7 @@ foreach ($records as $dog){
     <label>Name: </label><button type=button name="dog_name"> <?php echo  $name ?> </button>
   </div>
   <?php
-  $sql = "SELECT DISTINCT tags.name FROM dogs_tags INNER JOIN tags ON dogs_tags.tags_id = tags.id WHERE dogs_tags.dogs_id = $dogs_id ORDER BY tags.name;";
+  $sql = "SELECT DISTINCT tags.name FROM dogs_tags INNER JOIN tags ON dogs_tags.tag_id = tags.id WHERE dogs_tags.dog_id = $dog_id ORDER BY tags.name;";
   $records = exec_sql_query($db, $sql)->fetchAll(PDO::FETCH_ASSOC);
   ?>
 
