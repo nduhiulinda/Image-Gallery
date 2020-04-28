@@ -11,7 +11,8 @@ CREATE TABLE dogs(
   id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,
   name TEXT NOT NULL UNIQUE,
   file_name TEXT NOT NULL UNIQUE,
-  file_ext TEXT NOT NULL
+  file_ext TEXT NOT NULL,
+  citation TEXT NOT NULL
 );
 
 CREATE TABLE tags (
@@ -32,18 +33,18 @@ CREATE TABLE dogs_tags (
 -- INSERT INTO `examples` (id,name) VALUES (2, 'example-2');
 
 
-INSERT INTO dogs (id, name, file_name, file_ext) VALUES (1, 'Australian Retriever', 'australian_retriever.jpg', 'jpg');
-INSERT INTO dogs (id, name, file_name, file_ext) VALUES (2, 'Cocker Spaniel', 'cocker_spaniel.jpg', 'jpg');
-INSERT INTO dogs (id, name, file_name, file_ext) VALUES (3, 'Collie', 'collie.jpg', 'jpg');
-INSERT INTO dogs (id, name, file_name, file_ext) VALUES (4, 'Corgi Inu', 'corgi_inu.jpg', 'jpg');
-INSERT INTO dogs (id, name, file_name, file_ext) VALUES (5, 'Dalmatian', 'dalmatian.jpg', 'jpg');
-INSERT INTO dogs (id, name, file_name, file_ext) VALUES (6, 'King Shepherd', 'king_shepherd.jpg', 'jpg');
-INSERT INTO dogs (id, name, file_name, file_ext) VALUES (7, 'Mastiff', 'mastiff.jpg', 'jpg');
-INSERT INTO dogs (id, name, file_name, file_ext) VALUES (8, 'Poodle', 'poodle.jpg', 'jpg');
-INSERT INTO dogs (id, name, file_name, file_ext) VALUES (9, 'Pug', 'pug.jpg', 'jpg');
-INSERT INTO dogs (id, name, file_name, file_ext) VALUES (10, 'Rottweiler', 'rottweiler.jpg', 'jpg');
-INSERT INTO dogs (id, name, file_name, file_ext) VALUES (11, 'Spitz', 'spitz.jpg', 'jpg');
-INSERT INTO dogs (id, name, file_name, file_ext) VALUES (12, 'Terrier', 'terrier.jpg', 'jpg');
+INSERT INTO dogs (id, name, file_name, file_ext, citation) VALUES (1, 'Australian Retriever', 'australian_retriever.jpg', 'jpg', 'https://dogtime.com/dog-breeds/profiles');
+INSERT INTO dogs (id, name, file_name, file_ext, citation) VALUES (2, 'Cocker Spaniel', 'cocker_spaniel.jpg', 'jpg', 'https://dogtime.com/dog-breeds/profiles');
+INSERT INTO dogs (id, name, file_name, file_ext, citation) VALUES (3, 'Collie', 'collie.jpg', 'jpg', 'https://dogtime.com/dog-breeds/profiles');
+INSERT INTO dogs (id, name, file_name, file_ext, citation) VALUES (4, 'Corgi Inu', 'corgi_inu.jpg', 'jpg', 'https://dogtime.com/dog-breeds/profiles');
+INSERT INTO dogs (id, name, file_name, file_ext, citation) VALUES (5, 'Dalmatian', 'dalmatian.jpg', 'jpg', 'https://dogtime.com/dog-breeds/profiles');
+INSERT INTO dogs (id, name, file_name, file_ext, citation) VALUES (6, 'King Shepherd', 'king_shepherd.jpg', 'jpg', 'https://dogtime.com/dog-breeds/profiles');
+INSERT INTO dogs (id, name, file_name, file_ext, citation) VALUES (7, 'Mastiff', 'mastiff.jpg', 'jpg', 'https://dogtime.com/dog-breeds/profiles');
+INSERT INTO dogs (id, name, file_name, file_ext, citation) VALUES (8, 'Poodle', 'poodle.jpg', 'jpg', 'https://dogtime.com/dog-breeds/profiles');
+INSERT INTO dogs (id, name, file_name, file_ext, citation) VALUES (9, 'Pug', 'pug.jpg', 'jpg', 'https://dogtime.com/dog-breeds/profiles');
+INSERT INTO dogs (id, name, file_name, file_ext, citation) VALUES (10, 'Rottweiler', 'rottweiler.jpg', 'jpg', 'https://dogtime.com/dog-breeds/profiles');
+INSERT INTO dogs (id, name, file_name, file_ext, citation) VALUES (11, 'Spitz', 'spitz.jpg', 'jpg', 'https://dogtime.com/dog-breeds/profiles');
+INSERT INTO dogs (id, name, file_name, file_ext, citation) VALUES (12, 'Terrier', 'terrier.jpg', 'jpg', 'https://dogtime.com/dog-breeds/profiles');
 
 
 

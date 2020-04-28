@@ -35,8 +35,8 @@
       <a href=\"dog.php?". http_build_query(array('dog_id' => $image["id"])). "\">" . "<img src= \"uploads/dogs/" . $image["id"] . "." . $image["file_ext"] . "\" />
       <figcaption>". htmlspecialchars($image["name"]) . "</figcaption>
       </a> " . "
-      <!-- Source: https://dogtime.com/dog-breeds/profiles by Dogtime-->
-      <cite>Source:<a href=\"https://dogtime.com/dog-breeds/profiles\">Dogtime</a></cite>
+      <!-- Source: ".$image["citation"]." by Dogtime-->
+      <cite>Source: <a href=".$image["citation"]."> Dogtime</a></cite>
       </figure>
       </div>";
 

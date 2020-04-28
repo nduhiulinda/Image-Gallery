@@ -11,6 +11,7 @@ $records = exec_sql_query($db, $sql)->fetchAll(PDO::FETCH_ASSOC);
 foreach ($records as $dog){
     $name = htmlspecialchars($dog["name"]);
     $file_name = "uploads/dogs/".$dog["id"] . "." . $dog["file_ext"];
+    $citation = $dog["citation"];
 }
 ?>
 
@@ -33,8 +34,8 @@ foreach ($records as $dog){
 
 <div class="center">
   <a href="<?php echo $file_name ?>"><img src= <?php echo $file_name ?> alt= <?php echo $name ?>/></a>
-  <!-- Source: https://dogtime.com/dog-breeds/profiles by Dogtime-->
-  <cite>Source:<a href="https://dogtime.com/dog-breeds/profiles">Dogtime</a></cite>
+  <!-- Source: <?php echo $citation ?> -->
+  <cite>Source:<a href="<?php echo $citation ?>">Dogtime</a></cite>
 
   <?php
   $sql = "SELECT * FROM dogs WHERE id= $dog_id ORDER BY dogs.name;";

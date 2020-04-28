@@ -1,7 +1,6 @@
 <?php include("includes/init.php");
 
 const MAX_SIZE = 1000000;
-$db = open_or_init_sqlite_db('secure/site.sqlite', 'secure/init.sql');
 
 if (isset($_POST["submit_upload"])){
     $name = trim($_POST['image_name']);
