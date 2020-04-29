@@ -31,7 +31,15 @@
      foreach ($records as $image){
 
       echo "<div class=\"images\">
-      <figure>
+      <figure><div class=\"dropdown\">
+
+      <button id=\"dropdown\"><img id=\"ellipsis\" src=\"images/ellipsis.png\" alt=\"Ellipsis\">
+      <img id=\"close\" class=\"hidden\" src=\"images/close.png\" alt=\"Close\">
+      </button>
+    <div class=\"dropdown-content\">
+      <ul id = \"dot_options\" class=\"hidden\">
+      </div> </div>
+
       <a href=\"dog.php?". http_build_query(array('dog_id' => $image["id"])). "\">" . "<img src= \"uploads/dogs/" . $image["id"] . "." . $image["file_ext"] . "\" />
       <figcaption>". htmlspecialchars($image["name"]) . "</figcaption>
       </a> " . "

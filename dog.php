@@ -4,8 +4,8 @@
 
 <?php
 
-$dog_id = $_GET["dog_id"];
-$db = open_or_init_sqlite_db('secure/site.sqlite', 'secure/init.sql');
+$dog_id = trim($_GET["dog_id"]);
+$dog_id = filter_input(INPUT_GET, "dog_id", FILTER_VALIDATE_INT);
 $sql = "SELECT * FROM dogs WHERE id= $dog_id ORDER BY dogs.name;";
 $records = exec_sql_query($db, $sql)->fetchAll(PDO::FETCH_ASSOC);
 foreach ($records as $dog){
@@ -33,7 +33,13 @@ foreach ($records as $dog){
 <?php include("includes/uploads.php"); ?>
 
 <div class="center">
-  <a href="<?php echo $file_name ?>"><img src= <?php echo $file_name ?> alt= <?php echo $name ?>/></a>
+  <a href="<?php echo $file_name ?>">
+  <figure>
+    <button><a href="" >Edit Tags</a>
+    </button>
+    <button>Delete Image</a>
+    </button>
+  <img src= <?php echo $file_name ?> alt= <?php echo $name ?>/></a>
   <!-- Source: <?php echo $citation ?> -->
   <cite>Source:<a href="<?php echo $citation ?>">Dogtime</a></cite>
 
@@ -63,6 +69,7 @@ foreach ($records as $dog){
   }
   ?>
   </div>
+</figure>
 </div>
 
 </main>

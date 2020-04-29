@@ -3,8 +3,8 @@
 <html lang="en">
 <?php
 
-$tag_id = $_GET["tag_id"];
-$db = open_or_init_sqlite_db('secure/site.sqlite', 'secure/init.sql');
+$tag_id = trim($_GET["tag_id"]);
+$tag_id = filter_input(INPUT_GET, "tag_id", FILTER_VALIDATE_INT);
 $sql = "SELECT * FROM dogs_tags INNER JOIN dogs ON dogs.id = dogs_tags.dog_id WHERE dogs_tags.tag_id=$tag_id ORDER BY dogs.name;";
 $records = exec_sql_query($db, $sql)->fetchAll(PDO::FETCH_ASSOC);
 foreach ($records as $tag){

@@ -22,7 +22,6 @@ nav li{
     margin: 2%;
     border: solid;
     padding: 10px 30px;
-    /* border-color: #cae4ff; */
     border-color: #57abff;
     border-radius: 5%;
 }
@@ -39,8 +38,15 @@ nav li:hover{
     background-color: #57abff;
 }
 
+/* .curr_tag{
+    font-weight: bold;
+    border-style: inset;
+    background-color: #57abff;
+} */
+
 img{
-    max-width:300px;
+    width:300px;
+    max-height: 200px;
 }
 
 .images{
@@ -105,7 +111,7 @@ cite{
 }
 
 .center img{
-    width: 700px;
+    width: 300px;
     padding-top: 50px;
     padding-bottom: 40px;
     padding-left: 150px;
@@ -132,8 +138,34 @@ label{
     margin: 10px;
 }
 
+.feedback{
+    display: flex;
+    color: red;
+    text-align: left;
+    justify-content: left;
+    font-size: 16px;
+    flex-direction: column;
+    padding-left: 10%;
+  }
+
 footer{
     background-color: #cae4ff;
     margin-top: 100px;
     padding: 30px;
+}
+
+.dropdown img{
+    max-height: 20px;
+    max-width: 20px;
+    background: inherit;
+  }
+
+.dropdown button{
+    background:  none;
+    border: none;
+  }
+
+.dropdown{
+    margin: 0px;
+    padding: 0px;
 }
