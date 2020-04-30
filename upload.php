@@ -3,7 +3,7 @@
 const MAX_SIZE = 1000000;
 $tags_arr = [];
 $sql = "SELECT * FROM tags";
-$records = exec_sql_query($db, $sql);
+$records = exec_sql_query($db, $sql)->fetchAll(PDO::FETCH_ASSOC);
 if ($records){
   if (count($records)>0){
     foreach($records as $tag){
@@ -18,18 +18,14 @@ if (isset($_POST["submit_upload"])){
     $dog_name = filter_input(INPUT_POST, 'image_name', FILTER_SANITIZE_STRING);
     $uploaded_file = $_FILES["image_file"];
     $valid_submit = TRUE;
-    $tag = filter_input(INPUT_POST, 'image_tag', FILTER_SANITIZE_STRING);
+    $tag = $_POST["image_tag"];
     $citation= filter_input(INPUT_POST, 'image_citation', FILTER_SANITIZE_URL);
     $show_name_feedback = FALSE;
     $show_citation_feedback = FALSE;
     $show_size_feedback = FALSE;
     $show_file_feedback = FALSE;
 
-    var_dump("Dog name:".$dog_name);
-    var_dump("Tag:".$tag);
-    var_dump("Citation:".$citation);
-
-    //first make sure name, citation and file is not empty
+    //Make sure name, citation and file is not empty
     if (empty($dog_name)){
       $show_name_feedback = TRUE;
       $valid_submit = FALSE;
@@ -49,25 +45,20 @@ if (isset($_POST["submit_upload"])){
       $show_size_feedback=TRUE;
       $valid_submit = FALSE;
     }
-    var_dump("file size:".$uploaded_file);
-    var_dump("name feedb:".$show_name_feedback);
 
     //validate choosen tag
-    $tag_choosen = FALSE;
-    $new_tag = FALSE;
+    $tag_choosen = TRUE;
     $show_tag_feedback = FALSE;
-    if (!empty($tag)){
-      if ($tag=="Other"){
-        $new_tag = TRUE;
-        $tag_choosen = TRUE;
-      } else{
-        if (in_array($tag, $tags_arr)){
-          $tag_choosen= TRUE;
-        } else{
+    if (count($tag)!=0){
+      foreach($tag as $uploaded_tag){
+        if (!in_array($uploaded_tag, $tags_arr)){
+          $tag_choosen= FALSE;
           $valid_submit = FALSE;
           $show_tag_feedback = TRUE;
         }
       }
+    } else{
+      $tag_choosen = FALSE;
     }
 
     //validate file and add to DB
@@ -83,33 +74,35 @@ if (isset($_POST["submit_upload"])){
           );
 
           $sql = "INSERT INTO dogs (name, file_name, file_ext, citation) VALUES (:name, :file_name, :file_ext, :citation);";
-          $new_dog_id;
-          if (exec_sql_query($db, $sql, $params)){
-              $new_path = "uploads/dogs/".$db->lastInsertID("id").".".$file_ext;
-              move_uploaded_file($uploaded_file["tmp_name"], $new_path);
-              $new_dog_id = $db->lastInsertID("id");
-          }
-          var_dump("upload:".$new_path);
+          $dog_records= exec_sql_query($db, $sql, $params);
+          $new_dog_id = $db->lastInsertID("id");
 
-          if ($new_tag){
-            $params = array(
-              ':tag' => $tag
+          if ($tag_choosen){
+            //get tag id
+            foreach($tag as $uploaded_tag){
+              $params = array(
+                ':tag' => $uploaded_tag
+                );
+              $records = exec_sql_query($db, "SELECT id FROM tags WHERE name = :tag;", $params)->fetchAll(PDO::FETCH_ASSOC);
+              $new_tag_id = $records[0]["id"];
+
+              $params= array(
+                'new_tag_id'=>$new_tag_id,
+                'new_dog_id'=>$new_dog_id
               );
-            if (exec_sql_query($db, "INSERT INTO tags (name) VALUES (:tag);", $params)){
-              $records = exec_sql_query($db, "INSERT INTO dogs_tags (dog_id, tag_id) VALUES ($new_dog_id,".$db->lastInsertID("id")." );");
+              $rel_records = exec_sql_query($db, "INSERT INTO dogs_tags (dog_id, tag_id) VALUES (:new_dog_id, :new_tag_id);", $params);
             }
-          } else if ($tag_choosen){
-            $records = exec_sql_query($db, "INSERT INTO dogs_tags (dog_id, tag_id) VALUES ($new_dog_id,".$db->lastInsertID("id")." );");
+
+            if ($rel_records && $dog_records){
+              $new_path = "uploads/dogs/".$new_dog_id.".".$file_ext;
+              move_uploaded_file($uploaded_file["tmp_name"], $new_path);
+            }
           }
-
-
         } else{
           $show_size_feedback = TRUE;
         }
 
       }
-
-
 
 }
 
@@ -118,10 +111,7 @@ if (isset($_POST["submit_upload"])){
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <link rel="stylesheet" type="text/css" href="styles/site.css" media="all" />
-
+  <?php include("includes/head.php"); ?>
   <title>DOGGOS</title>
 </head>
 
@@ -135,7 +125,7 @@ if (isset($_POST["submit_upload"])){
 
 <p>To upload an image of a dog, fill the form and indicate which tag(s) are associated with the dog. Only .jpg, .jpeg and .png files are accepted. Required fields are marked with an asterisk *.</p>
 
-<form id="upload_file" enctype="multipart/form-data" method="POST" action="upload.php" novalidate>
+<form id="upload_file" enctype="multipart/form-data" method="POST" action="upload.php" >
 
     <input type="hidden" name="MAX_SIZE" value="<?php echo MAX_SIZE; ?>" />
 
@@ -160,18 +150,18 @@ if (isset($_POST["submit_upload"])){
     <?php if($show_tag_feedback) {echo "Kindly choose a tag provided in the menu";}?>
     </span>
         <label for="image_tag">Choose a tag(s):</label>
-        <select name="image_tag" id="image_tag">
-            <option value="">--Please choose an option--</option>
+
             <?php
             $records = exec_sql_query($db, "SELECT name FROM tags ORDER BY name")->fetchAll(PDO::FETCH_ASSOC);
               if (count($records)>0){
                 foreach ($records as $tag){
-                echo "<option value=\"".htmlspecialchars($tag["name"])."\">". htmlspecialchars($tag["name"]) ."</option>";
+                echo "<div class=\"check\"><input type=\"checkbox\" name=\"image_tag[]\"
+               value=\"".htmlspecialchars($tag["name"])."\" id=\"".htmlspecialchars($tag["name"])."\"><label>
+                ".htmlspecialchars($tag["name"])."</label></div>";
                 }
               }
             ?>
-            <option value="Other">Other</option>
-        </select>
+
     </div>
 
     <div class="form_label">

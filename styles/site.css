@@ -46,7 +46,11 @@ nav li:hover{
 
 img{
     width:300px;
-    max-height: 200px;
+    height: 200px;
+}
+
+.upload img{
+    height: 20px;
 }
 
 .images{
@@ -122,7 +126,7 @@ cite{
 }
 
 label{
-    float: left;
+    /* float: left; */
     text-align: right;
     width: 10em;
     margin-right: 10px;
@@ -168,4 +172,22 @@ footer{
 .dropdown{
     margin: 0px;
     padding: 0px;
+}
+
+div#delete_popup{
+    text-align: center;
+    border: solid #57abff;
+    background-color: #cae4ff;
+}
+
+.hidden{
+    display: none;
+}
+
+.check label{
+    margin-left: 20px;;
+}
+
+.check input{
+    margin-left: 80px;
 }

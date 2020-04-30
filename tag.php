@@ -12,11 +12,31 @@ foreach ($records as $tag){
     $file_name = "uploads/dogs/".$tag["dog_id"] . "." . $tag["file_ext"];
 }
 
+$del_confirmation = FALSE;
+if (isset($_POST["delete_image"])){
+  $dog_id = trim($_POST["dog_id"]);
+  $dog_id = filter_input(INPUT_POST, "dog_id", FILTER_VALIDATE_INT);
+  $file_name = trim($_POST["file_name"]);
+  $file_name = filter_input(INPUT_POST, "file_name", FILTER_SANITIZE_STRING);
+
+  $params = array(
+    ':dog_id' => $dog_id
+  );
+
+  $sql_1 = "DELETE FROM dogs WHERE dogs.id = :dog_id ;";
+  $sql_2 = "DELETE FROM dogs_tags WHERE dogs_tags.dog_id = :dog_id;";
+  if (exec_sql_query($db, $sql_1, $params)){
+    $records= exec_sql_query($db, $sql_2, $params);
+    $delink= unlink($file_name);
+    if ($records && $delink){
+      $del_confirmation = TRUE;
+    }
+  }
+}
+
 ?>
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <link rel="stylesheet" type="text/css" href="styles/site.css" media="all" />
+  <?php include("includes/head.php"); ?>
 
   <title><?php
   $sql = "SELECT name FROM tags WHERE tags.id = $tag_id;";
@@ -42,9 +62,26 @@ $sql = "SELECT * FROM dogs_tags INNER JOIN dogs ON dogs.id = dogs_tags.dog_id WH
 $records = exec_sql_query($db, $sql)->fetchAll(PDO::FETCH_ASSOC);
    if (count($records)>0){
      foreach ($records as $image){
-      echo "<div class=\"images\"><figure><a href=\"dog.php?". http_build_query(array('dog_id' => $image["id"])). "\">" . "<img src= \"uploads/dogs/" . $image["dog_id"] . "." . $image["file_ext"] . "\" /><figcaption>". htmlspecialchars($image["name"]) . "</figcaption></a> <!-- Source: ".$image["citation"]." by Dogtime-->
-      <cite>Source:<a href=\"".$image["citation"]."\">Dogtime</a></cite>" . "</figure></div>";
+      ?>
+      <div class="images">
+        <figure>
+        <div>
+    <form id="delete_image" method=
+  "POST" action="index.php">
+      <input type="hidden" name="dog_id" value="<?php echo $image["id"]; ?>">
+      <input type="hidden" name="file_name" value=" <?php echo $image["id"].".".$image["file_ext"]; ?>" >
+      <button id="delete" name="delete_image" type="submit" value="Delete">Delete Image </button>
+</form>
+    </div>
+          <a href="dog.php?<?php echo http_build_query(array('dog_id' => $image["id"])) ?>">
+        <img src= "uploads/dogs/<?php echo $image["dog_id"].".".$image["file_ext"]?> "/>
+        <figcaption><?php echo htmlspecialchars($image["name"]) ?> </figcaption></a>
+        <!-- Source: "<?php echo $image["citation"]?>" by Dogtime-->
+      <cite>Source:<a href=" <?php echo $image["citation"]?>">Dogtime</a></cite>
+    </figure>
+  </div>
 
+  <?php
      }
    }
 ?>

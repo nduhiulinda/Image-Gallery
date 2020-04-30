@@ -13,14 +13,34 @@ foreach ($records as $dog){
     $file_name = "uploads/dogs/".$dog["id"] . "." . $dog["file_ext"];
     $citation = $dog["citation"];
 }
+
+$del_confirmation = FALSE;
+if (isset($_POST["delete_image"])){
+  $dog_id = trim($_POST["dog_id"]);
+  $dog_id = filter_input(INPUT_POST, "dog_id", FILTER_VALIDATE_INT);
+  var_dump("dog id:".$dog_id);
+  $file_name = trim($_POST["file_name"]);
+  $file_name = filter_input(INPUT_POST, "file_name", FILTER_SANITIZE_STRING);
+  var_dump("filename:".$file_name);
+
+  $params = array(
+    ':dog_id' => $dog_id
+  );
+  $sql_1 = "DELETE FROM dogs WHERE dogs.id = :dog_id ;";
+  $sql_2 = "DELETE FROM dogs_tags WHERE dogs_tags.dog_id = :dog_id;";
+  if (exec_sql_query($db, $sql_1, $params)){
+    $records= exec_sql_query($db, $sql_2, $params);
+    $delink= unlink($file_name);
+    if ($records && $delink){
+      $del_confirmation = TRUE;
+    }
+  }
+}
+
 ?>
 
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <link rel="stylesheet" type="text/css" href="styles/site.css" media="all" />
-
-
+  <?php include("includes/head.php"); ?>
 
   <title><?php echo $name ?></title>
 </head>
@@ -35,10 +55,25 @@ foreach ($records as $dog){
 <div class="center">
   <a href="<?php echo $file_name ?>">
   <figure>
-    <button><a href="" >Edit Tags</a>
+    <button><a href="">Edit Tags</a>
     </button>
-    <button>Delete Image</a>
-    </button>
+    <div>
+    <form id="delete_image" method="POST" action="dog.php?dog_id=<?php echo $dog_id;?>">
+      <input type="hidden" name="dog_id" value="<?php echo $dog_id;?>">
+      <input type="hidden" name="file_name" value="<?php echo $file_name;?>">
+      <button id="delete" name="delete_image" type="submit" value="Delete">Delete Image </button>
+</form>
+    </div>
+
+<!--
+    <span id="yes_confirm" class="hidden">Image Deleted Successfully</span>
+    <div id="delete_popup" class="hidden">
+      <span>Are you sure you want to delete this image?</span>
+      <div>
+        <button class="yes_del">Delete</button>
+        <button class="no_del">Cancel</button>
+      </div>
+    </div> -->
   <img src= <?php echo $file_name ?> alt= <?php echo $name ?>/></a>
   <!-- Source: <?php echo $citation ?> -->
   <cite>Source:<a href="<?php echo $citation ?>">Dogtime</a></cite>
