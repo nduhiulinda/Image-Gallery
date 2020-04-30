@@ -21,6 +21,7 @@ if (isset($_POST["delete_image"])){
   var_dump("dog id:".$dog_id);
   $file_name = trim($_POST["file_name"]);
   $file_name = filter_input(INPUT_POST, "file_name", FILTER_SANITIZE_STRING);
+  $file_name = trim($file_name);
   var_dump("filename:".$file_name);
 
   $params = array(
@@ -28,9 +29,10 @@ if (isset($_POST["delete_image"])){
   );
   $sql_1 = "DELETE FROM dogs WHERE dogs.id = :dog_id ;";
   $sql_2 = "DELETE FROM dogs_tags WHERE dogs_tags.dog_id = :dog_id;";
-  if (exec_sql_query($db, $sql_1, $params)){
-    $records= exec_sql_query($db, $sql_2, $params);
+  if (exec_sql_query($db, $sql_2, $params)){
+    $records= exec_sql_query($db, $sql_1, $params);
     $delink= unlink($file_name);
+    $file_name="uploads/dogs/".$file_name;
     if ($records && $delink){
       $del_confirmation = TRUE;
     }
@@ -55,13 +57,13 @@ if (isset($_POST["delete_image"])){
 <div class="center">
   <a href="<?php echo $file_name ?>">
   <figure>
-    <button><a href="">Edit Tags</a>
-    </button>
+  <a href=""><button>Edit Tags
+    </button></a>
     <div>
     <form id="delete_image" method="POST" action="dog.php?dog_id=<?php echo $dog_id;?>">
       <input type="hidden" name="dog_id" value="<?php echo $dog_id;?>">
       <input type="hidden" name="file_name" value="<?php echo $file_name;?>">
-      <button id="delete" name="delete_image" type="submit" value="Delete">Delete Image </button>
+      <button onclick = "alert('Are you sure you want to delete this image?')" id="delete" name="delete_image" type="submit" value="Delete">Delete Image </button>
 </form>
     </div>
 

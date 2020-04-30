@@ -191,3 +191,12 @@ div#delete_popup{
 .check input{
     margin-left: 80px;
 }
+
+/* .popup{
+    visibility: hidden;
+}
+
+.popup:target{
+    visibility: visible;
+    opacity:1;
+} */

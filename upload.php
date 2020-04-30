@@ -125,7 +125,7 @@ if (isset($_POST["submit_upload"])){
 
 <p>To upload an image of a dog, fill the form and indicate which tag(s) are associated with the dog. Only .jpg, .jpeg and .png files are accepted. Required fields are marked with an asterisk *.</p>
 
-<form id="upload_file" enctype="multipart/form-data" method="POST" action="upload.php" >
+<form id="upload_file" enctype="multipart/form-data" method="POST" action="upload.php" novalidate>
 
     <input type="hidden" name="MAX_SIZE" value="<?php echo MAX_SIZE; ?>" />
 
