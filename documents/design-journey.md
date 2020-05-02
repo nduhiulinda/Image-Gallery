@@ -358,3 +358,6 @@ How to remove a tag from an existing image:
 - I have improved my debugging skills with var_dump(), examining the output console and testing sql queries using DB Browser
 - I have improved my website design and aesthetics by using Mozilla's reference docs
 - I have improved my trust in documentation websites like Mozilla MDN and PHP docs and learnt how to be self-reliant using the documentation.
+
+#### citations
+- I used Mozilla MDN reference documentation, PHP reference documentation, labs 7 (for Jquery), lab 5 component library on Campuswire.
