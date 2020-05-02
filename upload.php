@@ -12,7 +12,8 @@ if ($records){
     }
 }
 
-
+$new_dog_id;
+$show_upload_conf = FALSE;
 if (isset($_POST["submit_upload"])){
     $dog_name = trim($_POST['image_name']);
     $dog_name = filter_input(INPUT_POST, 'image_name', FILTER_SANITIZE_STRING);
@@ -97,6 +98,7 @@ if (isset($_POST["submit_upload"])){
               $new_path = "uploads/dogs/".$new_dog_id.".".$file_ext;
               move_uploaded_file($uploaded_file["tmp_name"], $new_path);
             }
+            $show_upload_conf = TRUE;
           }
         } else{
           $show_size_feedback = TRUE;
@@ -120,6 +122,44 @@ if (isset($_POST["submit_upload"])){
     <?php include("includes/header.php"); ?>
   </header>
 <main>
+
+<?php
+  if($show_upload_conf) { ?>
+
+    <h1>Image Successfully Uploaded!</h1>
+    <h2>Here's your new records:</h2>
+
+    <?php
+      $sql = "SELECT * FROM dogs WHERE id= $new_dog_id ORDER BY dogs.name;";
+      $records = exec_sql_query($db, $sql)->fetchAll(PDO::FETCH_ASSOC);
+      foreach ($records as $dog){
+          $dog_name = htmlspecialchars($dog["name"]);
+          $file_name = "uploads/dogs/".$dog["id"] . "." . $dog["file_ext"];
+          $citation = $dog["citation"];
+       ?>
+       <figure>
+        <img src="<?php echo $file_name ?>" alt="<?php echo $dog_name ?>"/>
+
+       <div class="content">
+
+         <label>Name:</label><span><?php echo $dog_name; ?></span>
+         <label>Citation:</label><span><?php echo $citation; ?></span>
+         <label>Tags:</label><span>
+
+       <?php }
+      $tag_sql = "SELECT DISTINCT tags.name FROM dogs_tags INNER JOIN tags ON dogs_tags.tag_id = tags.id WHERE dogs_tags.dog_id = $new_dog_id ORDER BY tags.name;";
+      $tag_records = exec_sql_query($db, $tag_sql)->fetchAll(PDO::FETCH_ASSOC);
+      foreach ($tag_records as $tag){
+        $tag_name = htmlspecialchars($tag["name"]);
+        ?>
+        <?php echo $tag_name; ?>  </span></figure>
+        </div>
+        <?php
+      }
+    ?>
+
+  <?php }else{
+   ?>
 
 <h1>Upload an image</h1>
 
@@ -149,14 +189,15 @@ if (isset($_POST["submit_upload"])){
     <span class="feedback">
     <?php if($show_tag_feedback) {echo "Kindly choose a tag provided in the menu";}?>
     </span>
-        <label for="image_tag">Choose a tag(s):</label>
+    <div class="check_label">
+        <label >Choose a tag(s):</label></div>
 
             <?php
-            $records = exec_sql_query($db, "SELECT name FROM tags ORDER BY name")->fetchAll(PDO::FETCH_ASSOC);
+            $records = exec_sql_query($db, "SELECT * FROM tags ORDER BY name")->fetchAll(PDO::FETCH_ASSOC);
               if (count($records)>0){
                 foreach ($records as $tag){
                 echo "<div class=\"check\"><input type=\"checkbox\" name=\"image_tag[]\"
-               value=\"".htmlspecialchars($tag["name"])."\" id=\"".htmlspecialchars($tag["name"])."\"><label>
+               value=\"".htmlspecialchars($tag["name"])."\" id=\"".htmlspecialchars($tag["id"])."\"><label>
                 ".htmlspecialchars($tag["name"])."</label></div>";
                 }
               }
@@ -173,13 +214,13 @@ if (isset($_POST["submit_upload"])){
     </div>
 
     <div class="form_label">
-        <button id="submit_upload" name="submit_upload" type="submit">Upload Image</button>
+        <button id="submit_upload" name="submit_upload" type="submit"><img src="images/upload_button.png" alt="Upload Icon"/></button>
     </div>
 
 </form>
-</main>
 
-<?php include("includes/footer.php"); ?>
+            <?php } ?>
+</main>
 
 </body>
 </html>

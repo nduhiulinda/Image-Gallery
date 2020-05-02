@@ -15,9 +15,11 @@
   </header>
 <main>
 
-
 <?php
   include("includes/uploads.php");
+  ?>
+        <h2>All Dogs</h2>
+  <?php
  $sql = "SELECT * FROM dogs ORDER BY dogs.name;";
  $params = array (
    ":file_name" => $file_name
@@ -30,12 +32,16 @@
       <figure>
 
       <a href="dog.php?<?php echo http_build_query(array('dog_id' => $image["id"])) ?>">
-      <img src= "uploads/dogs/<?php echo $image["id"].".".$image["file_ext"] ?>" />
-      <figcaption><?php echo htmlspecialchars($image["name"]) ?></figcaption>
+      <img src= "uploads/dogs/<?php echo $image["id"].".".$image["file_ext"] ?>" alt="<?php echo $image["name"] ?>"/>
       </a>
+      <figcaption><?php echo htmlspecialchars($image["name"]) ?></figcaption>
+
       <!-- Source: "<?php echo $image["citation"] ?>" by Dogtime-->
-      <cite>Source: <a href=" <?php echo $image["citation"] ?>"> Dogtime</a></cite>
       </figure>
+      <div>
+      <cite>Source: <a href=" <?php echo $image["citation"] ?>"> Dogtime</a></cite>
+      </div>
+
       </div>
 
      <?php }
@@ -43,8 +49,6 @@
  ?>
 
 </main>
-
-<?php include("includes/footer.php"); ?>
 
 </body>
 

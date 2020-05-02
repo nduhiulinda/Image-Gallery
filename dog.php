@@ -18,7 +18,6 @@ if (isset($_POST["delete_image"])){
   $file_name = trim($_POST["file_name"]);
   $file_name = filter_input(INPUT_POST, "file_name", FILTER_SANITIZE_STRING);
   $file_name = trim($file_name);
-  var_dump("filename:".$file_name);
 
   $params = array(
     ':dog_id' => $dog_id
@@ -41,21 +40,30 @@ if (isset($_POST["submit_new"])){
   $dog_id = filter_input(INPUT_POST, "dog_id", FILTER_VALIDATE_INT);
   $tag_name = trim($POST["new_tag_name"]);
   $tag_name = filter_input(INPUT_POST, "new_tag_name", FILTER_SANITIZE_STRING);
-  $params_1 = array(
-    ':tag_name' => $tag_name
-  );
-  $sql_1= "INSERT INTO tags (name) VALUES (:tag_name);";
-  $add_tag = exec_sql_query($db, $sql_1, $params_1)->fetchAll(PDO::FETCH_ASSOC);
-  $new_tag_id = $db->lastInsertID("id");
-  $sql_2 = "INSERT INTO dogs_tags (dog_id, tag_id) VALUES (:dog_id, :tag_id);";
-  $params_2 = array(
-    ':dog_id' => $dog_id,
-    ':tag_id' => $new_tag_id
-  );
-  $rel_tag = exec_sql_query($db, $sql_2, $params_2)->fetchAll(PDO::FETCH_ASSOC);
-  if ($rel_tag){
-    $show_new_tag_confirmation = TRUE;
+  $show_name_feedback = FALSE;
+  $valid_submit = TRUE;
+  if (empty($tag_name)){
+    $show_name_feedback = TRUE;
+    $valid_submit = FALSE;
   }
+  if($valid_submit){
+    $params_1 = array(
+      ':tag_name' => $tag_name
+    );
+    $sql_1= "INSERT INTO tags (name) VALUES (:tag_name);";
+    $add_tag = exec_sql_query($db, $sql_1, $params_1)->fetchAll(PDO::FETCH_ASSOC);
+    $new_tag_id = $db->lastInsertID("id");
+    $sql_2 = "INSERT INTO dogs_tags (dog_id, tag_id) VALUES (:dog_id, :tag_id);";
+    $params_2 = array(
+      ':dog_id' => $dog_id,
+      ':tag_id' => $new_tag_id
+    );
+    $rel_tag = exec_sql_query($db, $sql_2, $params_2)->fetchAll(PDO::FETCH_ASSOC);
+    if ($rel_tag){
+      $show_new_tag_confirmation = TRUE;
+    }
+  }
+
 }
 
 $show_existing_tag_confirmation = FALSE;
@@ -75,16 +83,21 @@ if (isset($_POST["submit_existing"])){
         }
       }
   }
+  $tag_feedback = FALSE;
   $tag_valid = TRUE;
   if (count($tag)!=0){
     foreach($tag as $uploaded_tag){
       if (!in_array($uploaded_tag, $tags_arr)){
         $tag_valid= FALSE;
+        $tag_feedback = TRUE;
       }
+      // else{
+      //   $tag_valid = FALSE;
+      //   $tag_feedback = TRUE;
+      // }
     }
-  } else{
-    $tag_valid = FALSE;
-  }
+
+
   if($tag_valid){
     $params= array(
       ':dog_id' => $dog_id
@@ -103,9 +116,18 @@ if (isset($_POST["submit_existing"])){
           'dog_id'=>$dog_id
         );
         $rel_records = exec_sql_query($db, "INSERT INTO dogs_tags (dog_id, tag_id) VALUES (:dog_id, :tag_id);", $params);
+        $show_existing_tag_confirmation = TRUE;
       }
     }
-
+  }
+  } else{
+    //all tags deleted
+    $params= array(
+      ':dog_id' => $dog_id
+    );
+    $del_sql = "DELETE FROM dogs_tags WHERE dogs_tags.dog_id = :dog_id;";
+    $records = exec_sql_query($db, $del_sql, $params);
+    $show_existing_tag_confirmation = TRUE;
   }
 }
 
@@ -114,7 +136,6 @@ function is_in_arr($db, $dog_id, $tag_name){
   $in_arr = FALSE;
   $sql = "SELECT DISTINCT tags.name FROM dogs_tags INNER JOIN tags ON dogs_tags.tag_id = tags.id WHERE dogs_tags.dog_id = $dog_id ORDER BY tags.name;";
   $records = exec_sql_query($db, $sql)->fetchAll(PDO::FETCH_ASSOC);
-  //var_dump($records);
   foreach($records as $tag){
     if($tag["name"]==$tag_name){
       $in_arr=TRUE;
@@ -143,30 +164,56 @@ function is_in_arr($db, $dog_id, $tag_name){
 <?php include("includes/uploads.php"); ?>
 
 <div class="center">
+  <span class="confirmation">
+    <?php if ($valid_submit){echo "<h3>New Tag Added Successfully!</h3>";}
+      if ($show_existing_tag_confirmation){echo "<h3>Tags Editted Successfully!</h3>" ;}
+
+       ?>
+  </span>
+
+  <?php
+
+  if ($del_confirmation){
+    ?>
+    <span>Image Successfully Deleted!</span>
+    <span>Click here to return to the main gallery:</span><a href="index.php"><button type="button">Back To Main Gallery</button></a>
+    <?php
+  } else{ ?>
+
+
+
   <a href="<?php echo $file_name ?>">
-  <figure>
-  <a class="edit_tags" href="#edit_tags"><button>Edit Tags
-    </button></a>
+
+  <figure id="dog">
+    <div class="top_button">
+  <a class="edit_tags" href="#edit_tags"><img src="images/edit.png" alt="edit icon"/><span class="hover_text">Edit Tags Below</span></a>
     <div>
-    <form id="delete_image" method="POST" action="index.php">
+    <form id="delete_image" method="POST" action="dog.php?dog_id=<?php echo $dog_id?>">
       <input type="hidden" name="dog_id" value="<?php echo $dog_id;?>">
       <input type="hidden" name="file_name" value="<?php echo $file_name;?>">
-      <button onclick = "alert('Are you sure you want to delete this image?')" id="delete" name="delete_image" type="submit" value="Delete">Delete Image </button>
-</form>
+    <a id="delete" class="del_image" href="#" title="Delete Image"><img src="images/delete.png" alt="delete icon"/><span class="hover_text">Delete Image</span></a>
+
+          <!--Source: Icons made by <a href="https://www.flaticon.com/authors/pixel-perfect" title="Pixel perfect">Pixel perfect</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a> -->
+          <cite>Source:<a href="https://www.flaticon.com/authors/pixel-perfect" title="Flaticon">www.flaticon.com</a></cite>
+      <!-- <button   type="button" value="Delete">Delete Image </button> -->
+
     </div>
 
-<!--
-    <span id="yes_confirm" class="hidden">Image Deleted Successfully</span>
-    <div id="delete_popup" class="hidden">
+  <div id="popup" class="hidden">
       <span>Are you sure you want to delete this image?</span>
       <div>
-        <button class="yes_del">Delete</button>
-        <button class="no_del">Cancel</button>
+        <button class="yes_del" type="submit" name="delete_image">Delete</button>
+        <button class="no_del" type="button">Cancel</button>
       </div>
-    </div> -->
+      </form>
+    </div>
+
+    </div>
+    <div>
   <img src= <?php echo $file_name ?> alt= <?php echo $name ?>/></a>
   <!-- Source: <?php echo $citation ?> -->
-  <cite>Source:<a href="<?php echo $citation ?>">Dogtime</a></cite>
+  <cite>Source:<a href="<?php echo $citation ?>">Dogtime</a></cite></div>
+
 
   <?php
   $sql = "SELECT * FROM dogs WHERE id= $dog_id ORDER BY dogs.name;";
@@ -199,44 +246,53 @@ function is_in_arr($db, $dog_id, $tag_name){
 </div>
 
 <div class="center">
-<div id="edit_tags"  class="hidden">
+<span class="feedback">
+    <?php if($show_name_feedback) {echo "Kindly provide the new tag name";}
 
+     if($tag_feedback) {echo "Kindly select only from the tags provided";}?>
+    </span>
+<div id="edit_tags"  class="hidden">
+  <h3>Edit Tags Here:</h3>
+  <div class="button">
   <button class="new_tag" name="new_tag" type="button" value="new_tag">Add a New Tag</button>
+  <button class="existing_tag" name="existing_tag" type="submit" value="existing_tag">Add/Delete Existing Tags</button></div>
+
   <div id="new_form" class="hidden">
-    <form id="new_tag" method="POST" action="dog.php?dog_id=<?php echo $dog_id?>">
+    <form id="new_tag" method="POST" action="#edit_tags">
       <input type="hidden" name="dog_id" value="<?php echo $dog_id; ?>"/>
       <div class="form_label">
-      <label for="new_tag_name">Tag Name: </label>
+      <label for="new_tag_name">New Tag Name: </label>
       <input type="text" id="new_tag_name" name="new_tag_name" value="<?php echo $new_tag_name;?>"/>
         <button id="submit_new" name="submit_new" type="submit">
           <img src="images/check.png" alt="check mark"/></button>
-          <cite>Icons made by <a href="https://www.flaticon.com/authors/pixel-perfect" title="Pixel perfect">Pixel perfect</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></cite>
+          <!--Source: Icons made by <a href="https://www.flaticon.com/authors/pixel-perfect" title="Pixel perfect">Pixel perfect</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a> -->
+          <cite>Source:<a href="https://www.flaticon.com/authors/pixel-perfect" title="Flaticon">www.flaticon.com</a></cite>
       </div>
     </form>
   </div>
 
-  <button class="existing_tag" name="existing_tag" type="submit" value="existing_tag">Add/Delete Existing Tags</button>
   <div id="existing_form" class="hidden">
+
     <form id="existing_tag" method="POST" action="dog.php?dog_id=<?php echo $dog_id?>">
     <input type="hidden" name="dog_id" value="<?php echo $dog_id; ?>"/>
       <div class="form_label">
-      <label for="new_tag_name">Check/Uncheck tags: </label>
-      <div class="check">
+      <label for="new_tag_name" class="label_check">Check/Uncheck tags: </label>
+      <!-- <div class="check"> -->
       <?php
-          $records = exec_sql_query($db, "SELECT name FROM tags ORDER BY name")->fetchAll(PDO::FETCH_ASSOC);
+          $records = exec_sql_query($db, "SELECT * FROM tags ORDER BY name")->fetchAll(PDO::FETCH_ASSOC);
             if (count($records)>0){
               foreach ($records as $tag){ ?>
               <div class="check">
                 <input type="checkbox" name="image_tag[]"
-              value="<?php echo htmlspecialchars($tag["name"])?>" id=" <?php echo htmlspecialchars($tag["name"])?>" <?php if (is_in_arr($db, $dog_id, $tag["name"])){ echo("checked"); }?> />
+              value="<?php echo htmlspecialchars($tag["name"])?>" id="<?php echo htmlspecialchars($tag["id"])?>" <?php if (is_in_arr($db, $dog_id, $tag["name"])){ echo("checked"); }?> />
               <label><?php echo htmlspecialchars($tag["name"]) ?></label>
             </div>
               <?php
               }
             }
             ?>
-        </div>
-        <button id="submit_new" name="submit_existing" type="submit">
+        <!-- </div> -->
+        <button id="submit_existing" name="submit_existing" type="submit">
           <img src="images/check.png" alt="check mark"/></button>
           <cite>Icons made by <a href="https://www.flaticon.com/authors/pixel-perfect" title="Pixel perfect">Pixel perfect</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></cite>
       </div>
@@ -246,30 +302,12 @@ function is_in_arr($db, $dog_id, $tag_name){
   </div>
 </div>
 
-<!-- placer
-<div>
-        <form id="new_tag" method="POST" action="index.php">
-          <input type="hidden" name="dog_id" value="<?php echo $image["id"]; ?>">
-          <button class="new_tag" name="new_tag" type="submit" value="new_tag">Add a New Tag</button>
-    </form>
-        </div>
-        <div>
-        <form id="existing_tag" method="POST" action="index.php">
-          <input type="hidden" name="dog_id" value="<?php echo $image["id"]; ?>">
-          <button class="existing_tag" name="existing_tag" type="submit" value="existing_tag">Add an Existing Tag</button>
-    </form>
-        </div>
-        <div>
-        <form id="del_tag" method="POST" action="index.php">
-          <input type="hidden" name="dog_id" value="<?php echo $image["id"]; ?>">
-          <button class="del_tag" name="del_tag" type="submit" value="del_tag">Delete a Tag</button>
-    </form>
-        </div>
--->
+<?php }
+  ?>
 
 </main>
 
-<?php include("includes/footer.php"); ?>
+
 </body>
 
 </html>

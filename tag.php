@@ -18,10 +18,12 @@ foreach ($records as $tag){
   <?php include("includes/head.php"); ?>
 
   <title><?php
+  $tagg_name;
   $sql = "SELECT name FROM tags WHERE tags.id = $tag_id;";
   $records = exec_sql_query($db, $sql)->fetchAll(PDO::FETCH_ASSOC);
   foreach ($records as $tag){
     $name = htmlspecialchars($tag["name"]);
+    $tagg_name = $name;
   }
   echo $name
   ?>
@@ -37,6 +39,8 @@ foreach ($records as $tag){
 <?php
   include("includes/uploads.php");
 
+  echo "<h2>".$tagg_name."</h2>";
+
 $sql = "SELECT * FROM dogs_tags INNER JOIN dogs ON dogs.id = dogs_tags.dog_id WHERE dogs_tags.tag_id=$tag_id ORDER BY dogs.name;";
 $records = exec_sql_query($db, $sql)->fetchAll(PDO::FETCH_ASSOC);
    if (count($records)>0){
@@ -44,7 +48,6 @@ $records = exec_sql_query($db, $sql)->fetchAll(PDO::FETCH_ASSOC);
       ?>
       <div class="images">
         <figure>
-        <div>
         <?php
             $sql = "SELECT * FROM dogs ORDER BY dogs.name;";
             $params = array (
@@ -60,24 +63,25 @@ $records = exec_sql_query($db, $sql)->fetchAll(PDO::FETCH_ASSOC);
                 ?>
 
                   <a href="dog.php?<?php echo http_build_query(array('dog_id' => $image["id"])) ?>">
-                <img src= "uploads/dogs/<?php echo $image["dog_id"].".".$image["file_ext"]?> "/>
-                <figcaption><?php echo htmlspecialchars($image["name"]) ?> </figcaption></a>
+                <img src= "uploads/dogs/<?php echo $image["dog_id"].".".$image["file_ext"]?> " alt="<?php echo $image["name"] ?>"/></a>
+                <figcaption><?php echo htmlspecialchars($image["name"]) ?> </figcaption>
                 <!-- Source: "<?php echo $image["citation"]?>" by Dogtime-->
+                </figure>
               <cite>Source:<a href=" <?php echo $image["citation"]?>">Dogtime</a></cite>
-            </figure>
+
           </div>
 
   <?php
 
 
      }
+   } else{?>
+        <h3>No Images to Display :( </h3>
+     <?php
    }
 ?>
 
 </main>
-
-<?php include("includes/footer.php"); ?>
-
 
 </body>
 

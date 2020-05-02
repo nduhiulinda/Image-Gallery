@@ -2,6 +2,7 @@ html{
     font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
     font-size: 110%;
     scroll-behavior: smooth;
+    max-width: 100% !important;
 }
 
 
@@ -17,11 +18,13 @@ nav{
 
 nav ul{
     list-style: none;
+    margin:0px;
 }
 
 nav li{
-    display: inline;
-    margin: 2%;
+    display: inline-flex;
+    flex: 1 0 0%;
+    margin: 1%;
     border: solid;
     padding: 10px 30px;
     border-color: #57abff;
@@ -40,12 +43,6 @@ nav li:hover{
     background-color: #57abff;
 }
 
-/* .curr_tag{
-    font-weight: bold;
-    border-style: inset;
-    background-color: #57abff;
-} */
-
 img{
     width:300px;
     height: 200px;
@@ -55,13 +52,19 @@ img{
     height: 20px;
 }
 
+.upload button{
+    width: 100%;
+}
+
+
+
 .images{
-    display: inline-flex;
+    display: inline-block;
     padding: 20px;
 }
 
 figure{
-    margin: 10px;
+    margin: 5px;
 }
 
 button img{
@@ -70,10 +73,18 @@ button img{
 
 figure{
     background-color: #cae4ff;
+    border-style: solid;
+    border-color: white;
 }
 
 figure:hover{
     background-color: #57abff;
+    border-style: solid;
+    border-color: #57abff;
+}
+
+#dog{
+    border-style: none;
 }
 
 figcaption{
@@ -90,12 +101,13 @@ button{
     border: none;
     border-radius: 2px;
     padding: 8px;
-    padding-right: 20px;
+    /* padding-right: 20px; */
     margin: 5px;
 }
 
 button:hover{
     background-color: #57abff;
+    cursor: pointer;
 }
 
 .upload{
@@ -107,6 +119,7 @@ cite{
     display: flex;
     flex-wrap: wrap;
 }
+
 
 .content{
     display: flex;
@@ -124,7 +137,7 @@ cite{
 
 .center img{
     width: 300px;
-    padding-top: 50px;
+    padding-top: 25px;
     padding-bottom: 40px;
     padding-left: 150px;
 }
@@ -134,14 +147,14 @@ cite{
 }
 
 label{
-    /* float: left; */
+    float: left;
     text-align: right;
     width: 10em;
     margin-right: 10px;
 }
 
 .form_label button{
-    margin-left: 250px;
+    margin-left: 300px;
     margin-top: 20px;
     text-align: center;
 }
@@ -156,9 +169,6 @@ label{
     padding: 0px;
 }
 
-.edit_tags button{
-    margin-left: 20px;
-}
 
 .feedback{
     display: flex;
@@ -192,29 +202,97 @@ footer{
     padding: 0px;
 }
 
-div#delete_popup{
+#popup{
     text-align: center;
     border: solid #57abff;
-    background-color: #cae4ff;
+    background-color: white;
 }
+
+
 
 .hidden{
     display: none !important;
 }
 
 .check label{
-    margin-left: 20px;;
+    margin-left: 10px;
+    float: none;
+    margin-bottom: 10px;
+    margin-top: 10px;
+
+}
+
+.check_label{
+    margin-right: 2000px;
+
+}
+
+.label_check{
+    margin-right: 2000px;
 }
 
 .check input{
-    margin-left: 80px;
+    margin-left: 190px;
 }
 
-/* .popup{
+.top_button{
+    position: static;
+    display: inline-flex;
+    margin-left: 200px;
+}
+
+.top_button cite{
+    display:flex;
+    position: static;
+}
+
+.top_button img{
+    margin-left: 20px;
+    padding: 5px;
+    width: 40px;
+    height: 40px;
+}
+
+.top_button img:hover{
+    background-color: #57abff;
+}
+
+.top_button .hover_text{
     visibility: hidden;
 }
 
-.popup:target{
+.del_image:hover .hover_text{
     visibility: visible;
-    opacity:1;
-} */
+    width: 120px;
+    background-color:white;
+    color:black;
+    border-radius: 6px;
+    padding-top: 1px;
+}
+
+.edit_tags:hover .hover_text{
+    visibility: visible;
+    width: 120px;
+    background-color:white;
+    color:black;
+    border-radius: 6px;
+
+}
+
+.hover_text{
+    display: inline-block;
+}
+
+h2, h3{
+    text-align: center;
+}
+
+.button{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.content{
+    padding-bottom: 30px;
+}
